@@ -1,0 +1,15 @@
+service: demo
+
+provider:
+  name: aws
+  runtime: nodejs14.x
+  region: eu-west-1
+  lambdaHashingVersion: '20201221'
+
+functions:
+  getDataFunction:
+    handler: dist/getDataFunction.handler
+    events:
+      - http: 
+          path: /data
+          method: get
