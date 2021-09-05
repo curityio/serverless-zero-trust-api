@@ -94,7 +94,8 @@ export class TrustChainValidator {
     }
 
     /*
-     * Check that the the x5t thumbprint in the JWT matches that of a certificate deployed with the API
+     * The API stores trusted token signing certificates so just needs to load the correct file
+     * In this model the API also needs to be able to deal with token signing certificate renewal
      */
     private async _validateX5tTrust(jwtHeader: JWSHeaderParameters): Promise<crypto.KeyObject> {
 
