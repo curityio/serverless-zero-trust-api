@@ -14,7 +14,7 @@ export class TrustChainValidator {
     }
 
     /*
-     * Demonstrates self contained JWT trust checks 
+     * Demonstrates self contained JWT trust checks, though typically a real API would only use one of these
      */
     public async validate(jwtHeader: JWSHeaderParameters): Promise<crypto.KeyObject | KeyLike> {
 
