@@ -21,12 +21,12 @@ export class TrustChainValidator {
         const jwk = jwtHeader.jwk as JWK;
         if (jwk && jwk.x5c) {
 
-            // If there is a jwk with an x5c field then verify the JWT's trust chain using its trust store
+            // If there is a jwk with an x5c field then verify the JWT's trust chain using the API's trust store
             return await this._validateJwkTrust(jwtHeader);
 
         } else if (jwtHeader.x5c) {
 
-            // If there is an x5c field then verify the JWT's trust chain using its trust store
+            // If there is an x5c field then verify the JWT's trust chain using the API's trust store
             return await this._validateX5cTrust(jwtHeader);
 
         } else {
