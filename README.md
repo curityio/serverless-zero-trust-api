@@ -79,7 +79,7 @@ Three scenarios are covered:
 
 -  Validating the full trust chain received in the `x5c` array field of the JWT header
 -  Validating the full trust chain received in the `jwk` object field of the JWT header
--  Validating the certificate thumbprint received in the `x5t` field of the JWT header
+-  Identifying a certificate from the `x5t` thumpbrint in the JWT header
 
 ## Libraries
 
