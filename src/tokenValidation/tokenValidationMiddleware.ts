@@ -8,24 +8,24 @@ import {TrustChainValidator} from './trustChainValidator';
  */
 export class TokenValidationMiddleware implements middy.MiddlewareObj<any, any> {
 
-    private readonly _trustChainValidator: TrustChainValidator;
-    private readonly _tokenValidator: TokenValidator;
+    private readonly trustChainValidator: TrustChainValidator;
+    private readonly tokenValidator: TokenValidator;
 
     public constructor(configuration: Configuration) {
-        this._trustChainValidator = new TrustChainValidator(configuration);
-        this._tokenValidator = new TokenValidator(configuration);
-        this._setupCallbacks();
+        this.trustChainValidator = new TrustChainValidator(configuration);
+        this.tokenValidator = new TokenValidator(configuration);
+        this.before = this.before.bind(this);
     }
 
     public async before(request: any): Promise<void> {
 
         try {
 
-            const [accessTokenJwt, header] = this._tokenValidator.parseToken(request.event.headers.Authorization);
+            const [accessTokenJwt, header] = this.tokenValidator.parseToken(request.event.headers.Authorization);
 
-            const tokenSigningPublicKey = await this._trustChainValidator.validate(header);
+            const tokenSigningPublicKey = await this.trustChainValidator.validate(header);
 
-            request.event.claims = await this._tokenValidator.validate(accessTokenJwt, tokenSigningPublicKey);
+            request.event.claims = await this.tokenValidator.validate(accessTokenJwt, tokenSigningPublicKey);
 
         } catch (e) {
 
@@ -41,9 +41,5 @@ export class TokenValidationMiddleware implements middy.MiddlewareObj<any, any> 
                 }),
             };
         }
-    }
-
-    private _setupCallbacks() {
-        this.before = this.before.bind(this);
     }
 }

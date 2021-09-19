@@ -18,7 +18,7 @@ export class TokenValidator {
      */
     public parseToken(authorizationHeader: string): [string, JWSHeaderParameters]  {
 
-        const accessTokenJwt = this._getAccessToken(authorizationHeader);
+        const accessTokenJwt = this.getAccessToken(authorizationHeader);
         const header = decodeProtectedHeader(accessTokenJwt) as JWSHeaderParameters;
         return [accessTokenJwt, header];
     }
@@ -57,7 +57,7 @@ export class TokenValidator {
     /*
      * The cloud system should be configured to pass the authorization header through to the lambda
      */
-    private _getAccessToken(authorizationHeader: string) {
+    private getAccessToken(authorizationHeader: string) {
 
         if (authorizationHeader && authorizationHeader.toLowerCase().startsWith('bearer ')) {
             return authorizationHeader.substring(7, authorizationHeader.length);
