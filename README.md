@@ -8,8 +8,8 @@ This code example shows how to do token validation using public key details embe
 
 ## Example API
 
-The sample uses a trivial lambda function that returns a hard coded response.
-Every call to the lambda validates the JWT, as part of a [Zero Trust Architecture](https://curity.io/solutions/zero-trust).
+The sample uses a trivial lambda function that returns a hard coded response.\
+Every call to the lambda validates a JWT, as part of a [Zero Trust Architecture](https://curity.io/solutions/zero-trust).
 
 ```yaml
 functions:
