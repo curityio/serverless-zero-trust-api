@@ -1,8 +1,5 @@
 import {KeyObject} from 'crypto';
-import {JWSHeaderParameters} from 'jose/types';
-import {KeyLike} from 'jose/jwk/parse'
-import {JWTPayload, jwtVerify} from 'jose/jwt/verify';
-import {decodeProtectedHeader} from 'jose/util/decode_protected_header';
+import {JWSHeaderParameters, KeyLike, JWTPayload, jwtVerify, decodeProtectedHeader} from 'jose';
 import {Configuration} from './configuration';
 
 export class TokenValidator {
@@ -26,7 +23,7 @@ export class TokenValidator {
     /*
      * Validate a JWT that contains embedded token signing details
      */
-    public async validate(accessTokenJwt: string, tokenSigningPublicKey: KeyObject | KeyLike): Promise<JWTPayload> {
+    public async validate(accessTokenJwt: string, tokenSigningPublicKey: KeyObject | KeyLike | Uint8Array): Promise<JWTPayload> {
 
         try {
 
