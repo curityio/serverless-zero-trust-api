@@ -1,8 +1,7 @@
 import base64url from 'base64url';
 import crypto from 'crypto';
 import fs from 'fs-extra'
-import parseJwk, {JWK, KeyLike} from 'jose/jwk/parse';
-import {JWSHeaderParameters} from 'jose/types';
+import {importJWK, JWK, KeyLike, JWSHeaderParameters} from 'jose';
 import {asn1, md, pki} from 'node-forge';
 import {Configuration} from './configuration';
 
@@ -17,7 +16,7 @@ export class TrustChainValidator {
     /*
      * Demonstrates self contained JWT trust checks, though typically a real API would only use one of these
      */
-    public async validate(jwtHeader: JWSHeaderParameters): Promise<crypto.KeyObject | KeyLike> {
+    public async validate(jwtHeader: JWSHeaderParameters): Promise<crypto.KeyObject | KeyLike | Uint8Array> {
 
         const jwk = jwtHeader.jwk as JWK;
         if (jwk && jwk.x5c) {
@@ -68,7 +67,7 @@ export class TrustChainValidator {
     /*
      * Check that the x5c chain in the JWT's jwk field satisfies the API's trust chain
      */
-    private async validateJwkTrust(jwtHeader: JWSHeaderParameters): Promise<KeyLike> {
+    private async validateJwkTrust(jwtHeader: JWSHeaderParameters): Promise<KeyLike | Uint8Array> {
 
         let jwk: JWK = jwtHeader.jwk as JWK;
         const pemCerts = this.getReceivedCertChain(jwk.x5c);
@@ -85,7 +84,7 @@ export class TrustChainValidator {
                 throw this.getCertificateChainVerificationError(result);
             }
 
-            return parseJwk(jwk);
+            return importJWK(jwk);
         
         } catch (e) {
 
