@@ -1,6 +1,6 @@
 import middy from '@middy/core';
-import {Configuration} from './tokenValidation/configuration';
-import {TokenValidationMiddleware} from './tokenValidation/tokenValidationMiddleware';
+import {Configuration} from './tokenValidation/configuration.js';
+import {TokenValidationMiddleware} from './tokenValidation/tokenValidationMiddleware.js';
 
 /*
  * The lambda contains normal API logic, which runs after token validation and can use claims

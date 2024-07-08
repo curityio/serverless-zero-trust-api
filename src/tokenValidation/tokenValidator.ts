@@ -1,6 +1,6 @@
 import {KeyObject} from 'crypto';
 import {JWSHeaderParameters, KeyLike, JWTPayload, jwtVerify, decodeProtectedHeader} from 'jose';
-import {Configuration} from './configuration';
+import {Configuration} from './configuration.js';
 
 export class TokenValidator {
 

@@ -2,8 +2,10 @@ import base64url from 'base64url';
 import crypto from 'crypto';
 import fs from 'fs-extra'
 import {importJWK, JWK, KeyLike, JWSHeaderParameters} from 'jose';
-import {asn1, md, pki} from 'node-forge';
-import {Configuration} from './configuration';
+import nodeForge from 'node-forge'
+import {Configuration} from './configuration.js';
+
+const {asn1, md, pki} = nodeForge;
 
 export class TrustChainValidator {
 
@@ -45,10 +47,10 @@ export class TrustChainValidator {
         const trustStore = await this.getWhitelistedCertificateIssuers();
 
         try {
-            
+
             const receivedCertChain = pemCerts.map((pem) => pki.certificateFromPem(pem));
             const result = pki.verifyCertificateChain(trustStore, receivedCertChain) as any;
-            
+
             // An error result may be returned
             // https://github.com/digitalbazaar/forge/blob/c900522e4198f17d3caad734304b375c0e237c87/js/x509.js#L2903
             if (result.error) {
@@ -56,7 +58,7 @@ export class TrustChainValidator {
             }
 
             return crypto.createPublicKey(pemCerts[0]);
-        
+
         } catch (e) {
 
             // Alternatively an error may be thrown
@@ -74,10 +76,10 @@ export class TrustChainValidator {
         const trustStore = await this.getWhitelistedCertificateIssuers();
 
         try {
-            
+
             const receivedCertChain = pemCerts.map((pem) => pki.certificateFromPem(pem));
             const result = pki.verifyCertificateChain(trustStore, receivedCertChain) as any;
-            
+
             // An error result may be returned
             // https://github.com/digitalbazaar/forge/blob/c900522e4198f17d3caad734304b375c0e237c87/js/x509.js#L2903
             if (result.error) {
@@ -85,7 +87,7 @@ export class TrustChainValidator {
             }
 
             return importJWK(jwk);
-        
+
         } catch (e) {
 
             // Alternatively an error may be thrown
@@ -100,7 +102,7 @@ export class TrustChainValidator {
     private async validateX5tTrust(jwtHeader: JWSHeaderParameters): Promise<crypto.KeyObject> {
 
         if (jwtHeader.kid) {
-        
+
             const pem = await this.loadCertificateForKid(jwtHeader.kid);
             if (pem) {
 
@@ -124,7 +126,7 @@ export class TrustChainValidator {
         if (!x5c) {
             throw new Error('The access token JWT header does not contain an x5c field');
         }
-        
+
         return x5c.map((der) => this.derToPem(der));
     }
 
@@ -141,7 +143,7 @@ export class TrustChainValidator {
     /*
      * Set up a trust store with whitelisted certificate authorities deployed with the API
      */
-    private async getWhitelistedCertificateIssuers(): Promise<pki.CAStore> {
+    private async getWhitelistedCertificateIssuers(): Promise<nodeForge.pki.CAStore> {
 
         const inter = await this.loadCertificate(`${this.configuration.deployedCertificatesLocation}/intermediate.pem`);
         const root  = await this.loadCertificate(`${this.configuration.deployedCertificatesLocation}/root.pem`);
@@ -158,7 +160,7 @@ export class TrustChainValidator {
      * For the code example this always loads the only signing certificate
      */
     private async loadCertificateForKid(kid: string): Promise<string | null> {
-        
+
         const path = `${this.configuration.deployedCertificatesLocation}/signing.pem`;
         return this.loadCertificate(path);
     }
@@ -181,8 +183,8 @@ export class TrustChainValidator {
      * Calculate the x5t thumbprint for a certificate according to the standards
      * https://datatracker.ietf.org/doc/html/rfc7515#section-4.1.7
      */
-    private getCertificateX5tThumbprint(cert: pki.Certificate): string {
-    
+    private getCertificateX5tThumbprint(cert: nodeForge.pki.Certificate): string {
+
         const derBytes = asn1.toDer(pki.certificateToAsn1(cert)).getBytes();
         const hexThumbprint = md.sha1.create().update(derBytes).digest().toHex();
         return base64url.encode(Buffer.from(hexThumbprint, 'hex'));
@@ -192,17 +194,17 @@ export class TrustChainValidator {
      * Collect any PKI error details
      */
     private getCertificateChainVerificationError(errorData: any) {
-        
+
         const parts = [];
         parts.push('x5c certificate chain verification failed');
-        
+
         if (errorData.error) {
             parts.push(errorData.error);
         }
         if (errorData.message) {
             parts.push(errorData.message);
         }
-        
+
         const logMessage = parts.join(' : ');
         throw new Error(logMessage);
     }

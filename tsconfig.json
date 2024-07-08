@@ -2,10 +2,10 @@
     "compilerOptions": {
       "strict": true,
       "target": "es2017",
-      "lib": ["es2017"],
-      "esModuleInterop": true,
-      "module": "commonjs",
+      "lib": ["ES2022"],
+      "module": "ES2022",
       "moduleResolution": "node",
+      "allowSyntheticDefaultImports": true,
       "outDir": "dist",
       "paths": {
         "jose": ["./node_modules/jose/dist/types"],
