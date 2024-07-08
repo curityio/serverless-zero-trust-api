@@ -1,7 +1,7 @@
 import middy from '@middy/core';
-import {Configuration} from './configuration';
-import {TokenValidator} from './tokenValidator';
-import {TrustChainValidator} from './trustChainValidator';
+import {Configuration} from './configuration.js';
+import {TokenValidator} from './tokenValidator.js';
+import {TrustChainValidator} from './trustChainValidator.js';
 
 /*
  * Implement cross cutting concerns for token validation and error handling here
